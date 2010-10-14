@@ -1,3 +1,21 @@
+/*
+---
+description: This plugin MooTools provides functionality for displaying simple binary clock  on a page.
+
+authors:
+  - Adrian Statescu (http://thinkphp.ro)
+
+license:
+  - MIT-style license
+
+requires:
+  core/1.3: '*'
+
+provides:
+  - BinaryClock
+...
+*/
+
 var BinaryClock = new Class({
  
         /* Constructor of class 
