@@ -1,6 +1,6 @@
 /*
 ---
-description: This class show you a binary clock
+description: This plugin MooTools provides functionality for displaying simple binary clock  on a page.
 
 authors:
   - Adrian Statescu (http://thinkphp.ro)
