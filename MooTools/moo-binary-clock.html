@@ -1,0 +1,26 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+   <meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />
+   <title>moo-binary-clock</title>
+   <style type="text/css">
+   #mycanvas{border: 1px solid #000;position: absolute;left: 24%;top: 100px}
+   h1{text-align: center;font-size: 50px}
+   #ft {color:#888;text-align:left;margin:2em 0;font-size: 20px;position:absolute;left: 24%;top: 400px}
+   #ft p a{color:#393;}
+   </style>
+   <script src="http://ajax.googleapis.com/ajax/libs/mootools/1.2.5/mootools-yui-compressed.js"></script>
+   <script type="text/javascript" src="BinaryClock-yui-compressed.js"></script>
+   <script type="text/javascript">
+    window.addEvent('domready',function(){
+           new BinaryClock('mycanvas'); 
+    });  
+   </script>
+</head>
+<body>
+<h1>Binary Clock</h1>
+<canvas id="mycanvas" height="240" width="520"></canvas>
+<div id="ft"><p>@<a href="http://twitter.com/thinkphp">thinkphp</a> | download on <a href="http://mootools.net/forge/download/BinaryClock/v1.0">Forge</a></p></div
+</body>
+</html>
+

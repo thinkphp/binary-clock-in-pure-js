@@ -1,0 +1,200 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />
+<title>Binary Clock in pure JavaScript</title>
+<style type="text/css">
+#mycanvas{border: 1px solid #000}
+</style>
+<script type="text/javascript">
+
+//binary clock for every website using Module Pattern
+var BinaryClock = (function(){
+
+    var main_canvas,
+        context,
+        width_canvas,
+        height_canvas;
+
+     function init() {
+
+          //the <canvas> is initially blank
+          //we retrieve the canvas DOM node using document.id method.
+          main_canvas = document.getElementById('mycanvas');
+
+          //get width canvas
+          width_canvas = main_canvas.width;
+
+          //get height canvas
+          height_canvas = main_canvas.height;
+
+          //the canvas element has a DOM method called 'getContext' 
+          //used to optain the rendering context and its drawing functions.
+          //this method takes one parameter, the type of context.
+          //now we can access the drawing context
+          context = main_canvas.getContext('2d');
+
+          //define time
+          currentTime = new Date();
+
+          //update time
+          update_time();
+  
+          //update time!!!
+          window.setInterval('BinaryClock.update_time()',1000);
+     };
+
+
+    function find_binary(nr) {
+
+          var string = [];
+
+          while(nr>0) {
+
+              if(nr%2 == 0) {
+                  string.push("0") 
+              } else {
+                  string.push("1") 
+              }
+
+              nr = Math.floor(nr/2); 
+          }//end while 
+
+          //reverse string for binary
+          var new_string = "";
+          for(var i=string.length-1;i>=0;i--) {
+              new_string += string[i]; 
+          } 
+          if(new_string == "") {
+              new_string = "0" ;
+          }
+
+       return new_string;
+    }
+
+    function update_time(){
+
+        currentTime = new Date();
+        var hours = currentTime.getHours(),
+            minutes = currentTime.getMinutes(),
+            seconds = currentTime.getSeconds(); 
+
+            hours = hours > 12 ? hours-12 : hours;
+
+           //convert seconds into into binary
+           binary_seconds = find_binary(seconds);
+           //convert minutes into binary
+           binary_minutes = find_binary(minutes);
+           //convert hours into binary
+           binary_hours = find_binary(hours);
+
+           update_canvas(binary_hours, binary_minutes, binary_seconds); 
+      };
+
+      function update_canvas(hours, minutes, seconds) {
+
+           context.beginPath();
+           context.fillStyle = "rgb(10,10,10)";  
+           context.fillRect(0, 0, width_canvas, height_canvas);  
+
+           //draw the bits
+
+           var gap = 50;
+
+           var pos_h = 5;
+
+           for(var h=hours.length-1;h>=0;h--) {
+           //x-coordonate
+           location_x = pos_h*gap - 15; 
+           //y-coordonate
+           location_y = 70;
+           //if hours[j] == 1 then bit is one
+           if(hours[h] == 1) {
+                on(location_x,location_y);
+           //otherwise is zero
+           } else {
+                off(location_x,location_y);
+           }     
+                //decrease --
+                pos_h -= 1;             
+           }
+
+           //added extra zero bits
+           if(hours.length-1 < 4) {
+              var n = 4 - hours.length - 1;
+              for(var n1=0;n1<=n;n1++) {
+                  off(100+n1*50-15, 70); 
+              }  
+           }  
+
+           var pos_m = 5;
+           for(var m=minutes.length-1;m>=0;m--) {
+              location_x = 35+pos_m*gap; 
+              location_y = 120;
+              if(minutes[m] == 1) {
+                 on(location_x,location_y);
+              } else {
+                 off(location_x,location_y);
+              }     
+                 pos_m -= 1;             
+           }
+
+           //add zero bits from right to left if necessary
+           add_extra(minutes.length-1, 120, 6);
+
+           var pos = 5;
+           for(var k = seconds.length-1; k>=0; k--){
+               location_x = 35+pos*gap; 
+               location_y = 170;
+               if(seconds[k] == 1) {
+                  on(location_x, location_y);
+               } else {
+                  off(location_x, location_y);
+               }     
+               pos -= 1;  
+          }
+
+           //add zero bits from right to left if necessary
+           add_extra(seconds.length-1, 170, 6);
+
+           context.closePath();
+      }
+
+     function add_extra(length, location_y, limit) {
+
+          if(length < limit) {
+              var n = limit - length; 
+              for(var n1=0;n1<=n;n1++) {
+                  off(35+n1*50, location_y);
+              }
+          } 
+     }
+
+     function on(x,y) {
+          context.beginPath();
+          context.fillStyle="rgb(10,150,10)";
+          context.arc(x, y, 15, 0, Math.PI*2, true); 
+          context.fill();
+          context.closePath();
+     }
+
+     function off(x,y) {
+          context.beginPath();
+          context.strokeStyle="rgb(10,150,10)";
+          context.arc(x, y, 15, 0, Math.PI*2,true); 
+          context.stroke();
+          context.closePath();
+     }
+
+   return {init: init,update_time: update_time};
+})();
+
+</script>
+</head>
+<body>
+<canvas id="mycanvas" height="240" width="320"></canvas>
+<script type="text/javascript">
+BinaryClock.init();
+</script>
+</body>
+</html>

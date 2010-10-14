@@ -1,0 +1,149 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+   <meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />
+   <title>Binary Clock in pure JavaScript</title>
+   <style type="text/css">
+   #mycanvas{border: 1px solid #000}
+   </style>
+   <script type="text/javascript">
+
+//binary clock for every website using Module Pattern
+var BinaryClock = (function(){
+
+    var main_canvas,
+        context,
+        width_canvas,
+        height_canvas;
+
+     function init() {
+
+          //the <canvas> is initially blank
+          //we retrieve the canvas DOM node using document.id method.
+          main_canvas = document.getElementById('mycanvas');
+
+          //get width canvas
+          width_canvas = main_canvas.width;
+
+          //get height canvas
+          height_canvas = main_canvas.height;
+
+          //the canvas element has a DOM method called 'getContext' 
+          //used to optain the rendering context and its drawing functions.
+          //this method takes one parameter, the type of context.
+          //now we can access the drawing context
+          context = main_canvas.getContext('2d');
+
+          //define time
+          currentTime = new Date();
+
+          //update time
+          update_time();
+  
+          //update time!!!
+          window.setInterval('BinaryClock.update_time()',1000);
+     };
+
+
+    function toBin(nr) {
+        var out = [];
+        for(var i=5;i>=0;i--) {
+            out.push((nr>>i)&1);        
+        }
+      return out;
+    }
+
+    function update_time(){
+
+        currentTime = new Date();
+        var hours = currentTime.getHours(),
+            minutes = currentTime.getMinutes(),
+            seconds = currentTime.getSeconds(); 
+
+            hours = hours > 12 ? hours-12 : hours;
+
+           //convert seconds into into binary
+           binary_seconds = toBin(seconds);
+           //convert minutes into binary
+           binary_minutes = toBin(minutes);
+           //convert hours into binary
+           binary_hours = toBin(hours);
+
+           update_canvas(binary_hours, binary_minutes, binary_seconds); 
+      };
+
+      function update_canvas(hours, minutes, seconds) {
+
+           context.beginPath();
+           context.fillStyle = "rgb(10,10,10)";  
+           context.fillRect(0,0,width_canvas,height_canvas);  
+
+           var pos_h = 5;
+           var gap = width_canvas/6 - 3;
+           for(var h=hours.length-1;h>=2;h--) {
+           location_x = -15+pos_h*gap; 
+           location_y = 70;
+           if(hours[h] == 1) {
+                on(location_x,location_y);
+           } else {
+                off(location_x,location_y);
+           }     
+                pos_h -= 1;             
+           }
+
+
+           var pos_m = 5;
+           for(var m=minutes.length-1;m>=0;m--) {
+              location_x = 35+pos_m*gap; 
+              location_y = 120;
+              if(minutes[m] == 1) {
+                 on(location_x,location_y);
+              } else {
+                 off(location_x,location_y);
+              }     
+                 pos_m -= 1;             
+           }
+
+           var pos = 5;
+           for(var k = seconds.length-1; k>=0; k--){
+               location_x = 35+pos*gap; 
+               location_y = 170;
+               if(seconds[k] == 1) {
+                  on(location_x, location_y);
+               } else {
+                  off(location_x, location_y);
+               }     
+               pos -= 1;  
+          }
+
+          context.closePath();
+      }
+
+     function on(x,y) {
+          context.beginPath();
+          context.fillStyle="rgb(10,150,10)";
+          context.arc(x,y,15,0,Math.PI*2,true); 
+          context.fill();
+          context.closePath();
+     }
+
+     function off(x,y) {
+          context.beginPath();
+          context.strokeStyle="rgb(10,150,10)";
+          context.arc(x,y,15,0,Math.PI*2,true); 
+          context.stroke();
+          context.closePath();
+     }
+
+   return {init: init,update_time: update_time};
+})();
+
+</script>
+</head>
+<body>
+<canvas id="mycanvas" height="240" width="320"></canvas>
+<script type="text/javascript">
+BinaryClock.init();
+</script>
+</body>
+</html>
